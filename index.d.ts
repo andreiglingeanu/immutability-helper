@@ -24,8 +24,8 @@ type Tree<T> = {[K in keyof T]?: Query<T[K]>}
 type Query<T> =
   | Tree<T>
   | ObjectOperators<T>
-  | ArrayOperators<T>
-  | SetOperators<T>
+  | ArrayOperators<any>
+  | SetOperators<any>
 
 type ObjectOperators<T> =
   | {$set: any}
