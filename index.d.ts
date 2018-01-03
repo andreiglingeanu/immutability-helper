@@ -38,7 +38,6 @@ type ArrayOperators<T> =
   | {$push: T}
   | {$unshift: T}
   | {$splice: Array<[number, number]>}
-  | {$splice: Array<[number, number]>}
 
 type MapOperators<K, V> = {$add: Array<[K, V]>} | {$remove: K[]}
 type SetOperators<T> = {$add: T[]} | {$remove: T[]}
