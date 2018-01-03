@@ -9,7 +9,6 @@ declare function update<T>(
   query: ArrayOperators<T>,
 ): ReadonlyArray<T>
 
-declare function update<T>(data: T, query: Query<T>): object
 declare function update<T>(
   data: ReadonlySet<T>,
   query: SetOperators<T>,
@@ -19,6 +18,8 @@ declare function update<K, V>(
   data: ReadonlyMap<K, V>,
   query: MapOperators<K, V>,
 ): ReadonlyMap<K, V>
+
+declare function update<T>(data: T, query: Query<T>): object
 
 type Tree<T> = {[K in keyof T]?: Query<T[K]>}
 type Query<T> =
@@ -32,7 +33,7 @@ type ObjectOperators<T> =
   | {$toggle: Array<keyof T>}
   | {$unset: Array<keyof T>}
   | {$merge: Partial<T>}
-  | {$apply: (old: T) => any}
+  | {$apply: (old: T) => T}
   | ((old: T) => any)
 type ArrayOperators<T> =
   | {$push: T}
