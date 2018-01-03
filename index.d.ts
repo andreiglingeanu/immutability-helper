@@ -6,26 +6,27 @@ export = update
 // declare function update<T>(data: T, query: update.Query<T>): T
 declare function update<T>(
   data: ReadonlyArray<T>,
-  query:
-    | {$push: T}
-    | {$unshift: T}
-    | {$splice: Array<[number, number]>}
-    | {$splice: Array<[number, number]>}
+  query: ArrayOperators<T>,
 ): ReadonlyArray<T>
 
 declare function update<T>(data: T, query: Query<T>): object
 declare function update<T>(
   data: ReadonlySet<T>,
-  query: {$add: any[]} | {$remove: string[]}
+  query: MapAndSetOperators<T>,
 ): ReadonlySet<T>
 
 declare function update<K, V>(
   data: ReadonlyMap<K, V>,
-  query: {$add: any[]} | {$remove: string[]}
+  query: MapAndSetOperators<T>,
 ): ReadonlyMap<K, V>
 
 type Tree<T> = {[K in keyof T]?: Query<T[K]>}
-type Query<T> = Tree<T> | ObjectOperators<T>
+type Query<T> =
+  | Tree<T>
+  | ObjectOperators<T>
+  | ArrayOperators<T>
+  | MapAndSetOperators<T>
+
 type ObjectOperators<T> =
   | {$set: any}
   | {$toggle: Array<keyof T>}
@@ -33,12 +34,19 @@ type ObjectOperators<T> =
   | {$merge: Partial<T>}
   | {$apply: (old: T) => any}
   | ((old: T) => any)
+type ArrayOperators<T> =
+  | {$push: T}
+  | {$unshift: T}
+  | {$splice: Array<[number, number]>}
+  | {$splice: Array<[number, number]>}
+
+type MapAndSetOperators<T> = {$add: any[]} | {$remove: string[]}
 
 declare namespace update {
   function newContext(): typeof update
   function extend<T>(
     command: Command,
-    handler: (param: CommandArg, old: T) => T
+    handler: (param: CommandArg, old: T) => T,
   ): void
 
   type Command = string
