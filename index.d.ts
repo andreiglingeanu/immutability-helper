@@ -12,12 +12,12 @@ declare function update<T>(
 declare function update<T>(data: T, query: Query<T>): object
 declare function update<T>(
   data: ReadonlySet<T>,
-  query: MapAndSetOperators<T>,
+  query: SetOperators<T>,
 ): ReadonlySet<T>
 
 declare function update<K, V>(
   data: ReadonlyMap<K, V>,
-  query: MapAndSetOperators<T>,
+  query: MapOperators<K, V>,
 ): ReadonlyMap<K, V>
 
 type Tree<T> = {[K in keyof T]?: Query<T[K]>}
@@ -25,7 +25,7 @@ type Query<T> =
   | Tree<T>
   | ObjectOperators<T>
   | ArrayOperators<T>
-  | MapAndSetOperators<T>
+  | SetOperators<T>
 
 type ObjectOperators<T> =
   | {$set: any}
@@ -40,7 +40,8 @@ type ArrayOperators<T> =
   | {$splice: Array<[number, number]>}
   | {$splice: Array<[number, number]>}
 
-type MapAndSetOperators<T> = {$add: any[]} | {$remove: string[]}
+type MapOperators<K, V> = {$add: Array<[K, V]>} | {$remove: K[]}
+type SetOperators<T> = {$add: T[]} | {$remove: T[]}
 
 declare namespace update {
   function newContext(): typeof update
